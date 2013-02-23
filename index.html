@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type' />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <style type="text/css">
+      body {
+        background-color: #ccc;
+      };
+    </style>
+    <script type="text/javascript">
+      function delta(a, b) {
+        var d = b - a;
+        return d < 0 ? (b + 2400) - a : d;
+      }
+
+      function inDuration() {
+        var start_time = $('#start_time').val();
+        var end_time = $('#end_time').val();
+
+        start_time = start_time.replace(':', '') / 1;
+        end_time = end_time.replace(':', '') / 1;
+
+        console.log('start_time:' + start_time);
+        console.log('end_time:' + end_time);
+
+        var duration = delta(start_time, end_time);
+        console.log('duration:' + duration);
+
+        var now = new Date();
+        now = (('0'+now.getHours()).slice(-2) + ('0'+now.getMinutes()).slice(-2)) / 1;
+        console.log('now:' + now);
+
+        var passed = delta(start_time, now);
+        console.log('passed:' + passed);
+
+        return duration > passed;
+      }
+
+      function playDuringDuration() {
+        var audio = document.getElementById('audio');
+
+        if (inDuration()) {
+          if (audio.paused) {
+            audio.play();
+          }
+        } else {
+          if (!audio.paused) {
+            audio.pause();
+          }
+        }
+      }
+
+      $(function() {
+        playDuringDuration();
+        setInterval(playDuringDuration, 60 * 1000);
+      });
+    </script>
+  </head>
+  <body>
+    <h1>auto-go-home</h1>
+
+    <audio id="audio" src="Hotaru_no_Hikari(Auld_lang_syne_in_Japan).ogg" controls loop>
+      <p>audioタグをサポートしたブラウザでしか動きません。</p>
+    </audio>
+
+    <div>
+      <input id="start_time" type="time" value="23:59" />
+      〜
+      <input id="end_time" type="time" value="04:00" />
+    </div>
+  </body>
+</html>
